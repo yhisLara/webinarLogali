@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="ProdMan" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Products" EntityType="ProdMan.Products">
+                    <NavigationPropertyBinding Path="Category" Target="Categories"/>
+                </EntitySet>
+                <EntitySet Name="Categories" EntityType="ProdMan.Categories">
+                    <NavigationPropertyBinding Path="ToProducts" Target="Products"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Products">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="Product" Type="Edm.String" MaxLength="100"/>
+                <Property Name="Description" Type="Edm.String" MaxLength="200"/>
+                <Property Name="Ranking" Type="Edm.Int32" DefaultValue="0"/>
+                <NavigationProperty Name="Category" Type="ProdMan.Categories" Partner="ToProducts">
+                    <ReferentialConstraint Property="Category_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="Category_ID" Type="Edm.Guid"/>
+            </EntityType>
+            <EntityType Name="Categories">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="Category" Type="Edm.String" Nullable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false"/>
+                <NavigationProperty Name="ToProducts" Type="Collection(ProdMan.Products)" Partner="Category">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+            </EntityType>
+            <Annotations Target="ProdMan.Products/Product">
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+            </Annotations>
+            <Annotations Target="ProdMan.Products/Ranking">
+                <Annotation Term="Validation.Minimum" Int="0"/>
+                <Annotation Term="Validation.Maximum" Int="5"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

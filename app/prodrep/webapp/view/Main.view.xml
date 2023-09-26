@@ -1,0 +1,149 @@
+<mvc:View controllerName="prueba.prodrep.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f = "sap.f"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:core="sap.ui.core"
+    >
+    <!--<Page id="page" title="{i18n>title}">
+        <content />
+    </Page>-->
+
+    <f:DynamicPage id="dynamicPage" showFooter="true">
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Text text="{i18n>title}" wrapping="true"></Text>
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header>
+            <f:DynamicPageHeader>
+                <fb:FilterBar showRestoreButton="false" 
+                              useToolbar="false" 
+                              showFilterConfiguration="false"
+                              showGoOnFB="false">
+                    <fb:filterGroupItems>
+                        <fb:FilterGroupItem name="Product"
+                                            groupName="filters"
+                                            label="Busca Products"
+                                            visibleInFilterBar="true">
+                            <fb:control>
+                                <Input value="{filters>/Products}" valueLiveUpdate="true" liveChange="onSearch"
+                                        enabled="{= !${viewModel>/hasUIChanges}}"/>
+                            </fb:control>
+                        </fb:FilterGroupItem>
+                        <fb:FilterGroupItem name="Category"
+                                        groupName="filters"
+                                        label="Busca Category"
+                                        visibleInFilterBar="true">
+                            <fb:control>
+                                <ComboBox   items="{path:'/Categories'}" 
+                                            selectedKey="{filters>/Category}"
+                                            selectionChange="onSearch"
+                                            enabled="{= !${viewModel>/hasUIChanges}}">
+                                    <items>
+                                        <core:Item key="{ID}" text="{Category}"/>
+                                    </items>
+                                </ComboBox>
+                            </fb:control>
+                        </fb:FilterGroupItem>
+                    </fb:filterGroupItems>
+                </fb:FilterBar>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <Table id="productsTable"
+                    growing="true"
+                    growingThreshold="10"
+                    items="{
+                        path:'/Products',
+                        parameters: {
+                            $count : true,
+                            $$updateGroupId : 'productGroup'
+                        }
+                    }"
+                    mode="SingleSelectLeft">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <content>
+                            <ToolbarSpacer />
+                            <Button id="addProduct" 
+                                    icon="sap-icon://add" 
+                                    tooltip="{i18n>createProductButton}"
+                                    press="onCreate"
+                                    type="Emphasized"  />
+                            <Button id="deleteProduct" 
+                                    icon="sap-icon://delete" 
+                                    tooltip="{i18n>deleteProductButton}"
+                                    press="onDelete"
+                                    type="Negative"  />
+                            <Button id="sortProduct" 
+                                    icon="sap-icon://sort"
+                                    enabled="{= !${viewModel>/hasUIChanges}}"
+                                    tooltip="{i18n>sortProductButton}"
+                                    press="onSort"
+                                    type="Emphasized"  />
+                            <Button id="clearFilters" 
+                                    icon="sap-icon://clear-filter"
+                                    tooltip="{i18n>sortProductButton}"
+                                    press="onClearFilters"
+                                    type="Emphasized"  />
+                        </content>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <columns>
+                    <Column hAlign="Begin" minScreenWidth="Small" demandPopin="true">
+                        <Text text="{i18n>tableProduct}" />
+                    </Column>
+                      <Column hAlign="Begin" minScreenWidth="Small" demandPopin="true">
+                        <Text text="{i18n>tableDescription}" />
+                    </Column>
+                      <Column hAlign="Begin" minScreenWidth="Small" demandPopin="true">
+                        <Text text="{i18n>tableCategory}" />
+                    </Column>
+                      <Column hAlign="Begin" minScreenWidth="Small" demandPopin="true">
+                        <Text text="{i18n>tableRanking}" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Input value="{Product}"
+                                   liveChange="onInputChange">
+                            </Input>
+                            <Input value="{Description}"
+                                   liveChange="onInputChange">
+                            </Input>
+                            <ComboBox   items="{path:'/Categories', templateShareable:'true'}" 
+                                            selectedKey="{Category_ID}"
+                                            selectionChange="onInputChange">
+                                    <items>
+                                        <core:Item key="{ID}" text="{Category}"/>
+                                    </items>
+                            </ComboBox>
+                            <RatingIndicator value="{Ranking}" 
+                                             liveChange="onInputChange"/>
+
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </f:content>
+
+        <f:footer>
+            <OverflowToolbar visible="{viewModel>/hasUIChanges}">
+                <ToolbarSpacer />
+                    <Button id="saveButton"
+                            text="{i18n>saveButton}"
+                            press="onSave"
+                            type="Success"/>
+                    <Button id="cancelButton"
+                            text="{i18n>cancelButton}"
+                            press="onResetChanges"
+                            type="Negative"  />        
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

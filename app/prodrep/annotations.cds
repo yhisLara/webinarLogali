@@ -1,0 +1,1 @@
+using ProdMan as service from '../../srv/services';
